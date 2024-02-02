@@ -30,7 +30,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ route }) => {
     <FlatList
       style={styles.container}
       data={colors}
-      keyExtractor={(item) => item.colorName}
+      keyExtractor={item => item.colorName}
       renderItem={({ item }) => (
         <ColorBox colorName={item.colorName} colorHex={item.hexCode} />
       )}
