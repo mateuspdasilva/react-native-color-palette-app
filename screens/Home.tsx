@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
 const URL = 'https://color-palette-api.kadikraman.now.sh/palettes';
 
-const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
+const Home: React.FC<HomeProps> = ({ navigation, route }) => {
+  const newColorPalette = route.params ? route.params.newColorPalette : undefined;
   const [colorPalettes, setColorPalettes] = useState<ColorPalette[]>([]);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
@@ -29,6 +30,12 @@ const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
     }, 1000)
   }, []);
 
+  useEffect(() => {
+    if (newColorPalette) {
+      setColorPalettes(palettes => [newColorPalette, ...colorPalettes])
+    }
+  }, [newColorPalette]);
+
   return (
     <FlatList
       style={styles.list}
@@ -38,7 +45,7 @@ const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
         <>
           <PalettePreview
             handlePress={() => {
-              navigation.navigate('ColorPalette', item);
+              navigation.navigate('ColorPalette', { newColorPalette: item });
             }}
             colorPalette={item}
           />
@@ -46,6 +53,15 @@ const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
       )}
       refreshing={isRefreshing}
       onRefresh={handleRefresh}
+      ListHeaderComponent={
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ColorPaletteModal');
+          }}
+        >
+          <Text style={styles.text}>+ Add new color palette</Text>
+        </TouchableOpacity>
+      }
     />
   );
 };
@@ -54,6 +70,12 @@ const styles = StyleSheet.create({
   list: {
     padding: 10,
     backgroundColor: 'white',
+  },
+  text: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 10,
+    color: 'teal',
   },
 });
 
