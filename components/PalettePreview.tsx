@@ -1,8 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { TouchableOpacity, Text, StyleSheet, View, FlatList } from 'react-native';
 
-const PalettePreview = ({ handlePress, colorPalette }) => {
+const PalettePreview: React.FC<PalettePreviewProps> = ({ handlePress, colorPalette }) => {
     return (
         <TouchableOpacity onPress={handlePress}>
             <Text style={styles.text}>{colorPalette.paletteName}</Text>
@@ -10,8 +9,10 @@ const PalettePreview = ({ handlePress, colorPalette }) => {
                 horizontal={true}
                 style={styles.list}
                 data={colorPalette.colors.slice(0, 5)}
-                keyExtractor={item => item.colorName}
-                renderItem={({ item }) => (<View style={[styles.box, { backgroundColor: item.hexCode }]} />)}
+                keyExtractor={(item) => item.colorName}
+                renderItem={({ item }) => (
+                    <View style={[styles.box, { backgroundColor: item.hexCode }]} />
+                )}
             />
         </TouchableOpacity>
     );
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     list: {
         marginBottom: 20,
         flexDirection: 'row',
-    }
+    },
 });
 
 export default PalettePreview;
