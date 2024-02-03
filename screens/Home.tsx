@@ -6,6 +6,7 @@ const URL = 'https://color-palette-api.kadikraman.now.sh/palettes';
 
 const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [colorPalettes, setColorPalettes] = useState<ColorPalette[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const fetchColorPalettes = useCallback(async () => {
     const result = await fetch(URL);
@@ -18,6 +19,14 @@ const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   useEffect(() => {
     fetchColorPalettes();
+  }, []);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await fetchColorPalettes();
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000)
   }, []);
 
   return (
@@ -35,6 +44,8 @@ const Home: React.FC<{ navigation: any }> = ({ navigation }) => {
           />
         </>
       )}
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
     />
   );
 };
